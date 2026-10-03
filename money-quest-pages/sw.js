@@ -1,6 +1,6 @@
 /* Service worker: เก็บไฟล์แอปไว้ในเครื่อง เปิดได้ทันทีแม้เน็ตช้า/ออฟไลน์
    เมื่อแก้ไฟล์แอป ให้เปลี่ยนเลขเวอร์ชันด้านล่าง (เช่น v2 → v3) เพื่อให้ iPhone โหลดของใหม่ */
-const VERSION = 'mq-v3';
+const VERSION = 'mq-v4';
 const SHELL = [
   './', './index.html', './manifest.webmanifest',
   './img/state1.webp', './img/state2.webp', './img/state3.webp', './img/state4.webp', './img/state5.webp',

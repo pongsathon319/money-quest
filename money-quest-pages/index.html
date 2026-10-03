@@ -336,14 +336,14 @@ let QUEUE = LS.get('mq_queue', []);
 let flushing = false;
 function applyLocal(D, e){
   let d = D.days.find(x=>x.date===e.date);
-  if (!d) { d = {date:e.date, inc:{}, exp:{}, items:{inc:{},exp:{}}, row:0, note:'', sheetSumExp:null}; D.days.push(d); }
+  if (!d) { d = {date:e.date, inc:{}, exp:{}, items:{inc:{},exp:{}}, row:0, note:'', sheetSumExp:null, sheetSumInc:null, sheetNet:null}; D.days.push(d); }
   const k = e.type==='inc' ? 'inc' : 'exp';
   const prev = d[k][e.cat] || 0;
   d.items = d.items || {inc:{},exp:{}}; d.items[k] = d.items[k] || {};
   const arr = d.items[k][e.cat] || (prev ? [prev] : []);
   arr.push(+e.amount); d.items[k][e.cat] = arr;
   d[k][e.cat] = +((prev + +e.amount).toFixed(2));
-  d.sheetSumExp = null;
+  d.sheetSumExp = d.sheetSumInc = d.sheetNet = null;
   if (e.note) d.note = (d.note ? d.note+' | ' : '') + e.cat+' '+e.amount+': '+e.note;
 }
 /** แก้/ลบรายการย่อยในข้อมูลที่ถืออยู่ (ใช้ในโหมดตัวอย่าง) */
@@ -357,7 +357,7 @@ function editLocal(D, p){
   if (p.del) { a.splice(p.index,1); put(p.cat, a); }
   else if (!p.newCat || p.newCat===p.cat) { a[p.index] = +p.newAmount; put(p.cat, a); }
   else { a.splice(p.index,1); put(p.cat, a); const b = get(p.newCat); b.push(+p.newAmount); put(p.newCat, b); }
-  d.sheetSumExp = null;
+  d.sheetSumExp = d.sheetSumInc = d.sheetNet = null;
 }
 function itemsOf(d){
   const out = [];
@@ -417,23 +417,23 @@ const Mock = (() => {
     ['2026-09-26',{},{'ค่าอาหาร':365,'ค่าเครื่องดื่ม':30,'ออกกำลังกาย':40},435],
     ['2026-09-27',{},{'ค่าอาหาร':380,'ค่าเครื่องดื่ม':30},410],
     ['2026-09-28',{},{'ค่าอาหาร':345,'ค่าเครื่องดื่ม':30,'subscription':67},442],
-    ['2026-09-29',{},{'ค่าอาหาร':184,'ค่าเครื่องดื่ม':30,'shopee':360,'สลากกินแบ่ง':160},214],
+    ['2026-09-29',{},{'ค่าอาหาร':184,'ค่าเครื่องดื่ม':30,'shopee':360,'สลากกินแบ่ง':160},734],
     ['2026-09-30',{},{'ค่าอาหาร':170,'ค่าเครื่องดื่ม':30,'ค่าของใช้ครัวเรือน':500},700],
     ['2026-10-01',{},{'true wallet':500,'ค่าเครื่องดื่ม':30,'ค่าบ้าน':100},630],
     ['2026-10-02',{},{'ค่าโทรศัพท์':412.93},412.93],
     ['2026-10-03',{},{'ค่าอาหาร':82.5,'ค่าเครื่องดื่ม':50,'subscription':699,'ออกกำลังกาย':110},941.5],
   ].map(([date,i,e,s],k)=>({date,inc:i,exp:e,sheetSumExp:s,row:k+2,note:''}));
-  let settings = {limits:{'ค่าอาหาร':{daily:200,monthly:0},'ค่าเสื้อผ้า':{daily:0,monthly:500}},dailyBudget:0,savingGoalPct:20,payday:0,theme:'dark',reminder:{enabled:false,hour:20,email:true},alertOnLimit:true,bills:[{name:'ค่าโทรศัพท์',day:2,amount:413},{name:'ค่าบ้าน',day:25,amount:778}],watchlist:['^SET.BK','PTT.BK','CPALL.BK','AAPL','NVDA','GC=F'],fx:['USD','EUR','JPY','CNY','GBP','SGD'],icons:{}};
+  let settings = {limits:{'ค่าอาหาร':{daily:200,monthly:0},'ค่าเสื้อผ้า':{daily:0,monthly:500}},dailyBudget:0,savingGoalPct:20,payday:0,theme:'dark',reminder:{enabled:false,hour:20,email:true},alertOnLimit:true,bills:[{name:'ค่าโทรศัพท์',day:2,amount:413},{name:'ค่าบ้าน',day:25,amount:778}],watchlist:['^SET.BK','PTT.BK','CPALL.BK','AAPL','NVDA','GC=F'],fx:['USD','EUR','JPY','CNY','GBP','SGD'],icons:{},userName:'KruIce'};
   const pack = () => JSON.parse(JSON.stringify({ok:true,incomeCats:inc,expenseCats:exp,days,settings,today:'2026-10-03',email:'you@gmail.com'}));
-  const dayOf = date => { let d = days.find(x=>x.date===date); if(!d){ d={date,inc:{},exp:{},row:0,note:'',sheetSumExp:null}; days.push(d); days.sort((a,b)=>a.date<b.date?-1:1);} return d; };
+  const dayOf = date => { let d = days.find(x=>x.date===date); if(!d){ d={date,inc:{},exp:{},row:0,note:'',sheetSumExp:null,sheetSumInc:null,sheetNet:null}; days.push(d); days.sort((a,b)=>a.date<b.date?-1:1);} return d; };
   const sp = (n,b,v)=>Array.from({length:n},(_,i)=>+(b*(1+Math.sin(i/2.7+v)*.03+(i-n/2)*v*.002)).toFixed(2));
   return {
     getAppData: pack,
     addEntries(list){ list.forEach(e=>applyLocal({days}, e)); days.sort((a,b)=>a.date<b.date?-1:1); return pack(); },
     editItem(p){ editLocal({days}, p); return pack(); },
-    setCell(p){ const d=dayOf(p.date), k=p.type==='inc'?'inc':'exp'; if(+p.value) d[k][p.cat]=+p.value; else delete d[k][p.cat]; d.sheetSumExp=null; return pack(); },
-    addCategory(p){ (p.type==='inc'?inc:exp).push(p.name); return pack(); },
-    repairFormulas(){ days.forEach(d=>d.sheetSumExp=null); return pack(); },
+    setCell(p){ const d=dayOf(p.date), k=p.type==='inc'?'inc':'exp'; if(+p.value) d[k][p.cat]=+p.value; else delete d[k][p.cat]; d.sheetSumExp=d.sheetSumInc=d.sheetNet=null; return pack(); },
+    addCategory(p){ if(p.type==='inc') throw new Error('รายรับเพิ่มหมวดไม่ได้ (มีเฉพาะคอลัมน์ D และ E)'); exp.splice(exp.length-1,0,p.name); return pack(); },
+    repairFormulas(){ days.forEach(d=>{d.sheetSumExp=d.sheetSumInc=d.sheetNet=null;}); return pack(); },
     saveSettings(s){ settings=JSON.parse(JSON.stringify(s)); return JSON.parse(JSON.stringify(settings)); },
     testNotification(){ return true; },
     getMarket(){ return { demo:true, updated:'ข้อมูลตัวอย่าง',
@@ -526,7 +526,14 @@ function buildModel(D){
   const days = D.days.slice().sort((a,b)=>a.date<b.date?-1:1);
   const byDate = {};
   let run = 0;
-  days.forEach(d => { d.incT = sum(d.inc); d.expT = sum(d.exp); run += d.incT - d.expT; d.bal = run; byDate[d.date] = d; });
+  // ตัวเลขสรุป (รายรับ/รายจ่าย/คงเหลือสะสม) ใช้จากชีต Sum ถ้ามี ไม่งั้นคำนวณเองจากหมวด
+  days.forEach(d => {
+    d.incT = d.sheetSumInc != null ? d.sheetSumInc : sum(d.inc);
+    d.expT = d.sheetSumExp != null ? d.sheetSumExp : sum(d.exp);
+    run += d.incT - d.expT;
+    if (d.sheetNet != null) run = d.sheetNet;
+    d.bal = run; byDate[d.date] = d;
+  });
   const today = D.today, month = today.slice(0,7);
   const td = byDate[today] || {date:today,inc:{},exp:{},incT:0,expT:0};
 
@@ -565,7 +572,7 @@ function buildModel(D){
 
   const last30 = days.filter(d => d.date > addDays(today,-30) && d.date <= today && (d.expT||d.incT));
   const avgDaily = last30.length ? last30.reduce((a,d)=>a+d.expT,0) / Math.max(1, diffDays(last30[0].date, today)+1) : 0;
-  const mismatch = days.filter(d => d.sheetSumExp!=null && Math.abs(d.sheetSumExp - d.expT) > 0.009);
+  const mismatch = days.filter(d => d.sheetSumExp!=null && Math.abs(d.sheetSumExp - sum(d.exp)) > 0.009);
   const months = [...new Set(days.map(d=>d.date.slice(0,7)))].sort();
   return {days, byDate, today, month, td, balance:run, salaryCat, lastSalary, payDay, nextPay, cycleStart, cInc, cExp, base, remain, pct, state, daysLeft, perDay, dailyBudget,
     limits, catMonth, expOrder: byFreq(D.expenseCats), incOrder: byFreq(D.incomeCats), avgDaily, mismatch, months};
@@ -591,8 +598,8 @@ function renderHome(){
     if (diff <= 3) alerts.push(`<div class="alert warn"><span>📅</span><div>${diff===0?'วันนี้':diff===1?'พรุ่งนี้':'อีก '+diff+' วัน'} ครบกำหนด <b>${esc(b.name)}</b>${b.amount?' · '+baht(b.amount):''}</div></div>`);
   });
   if (M.mismatch.length) {
-    const diff = M.mismatch.reduce((a,d)=>a+(d.expT-d.sheetSumExp),0);
-    alerts.push(`<div class="alert bad"><span>🧮</span><div>สูตร sumรายจ่ายในชีตนับไม่ครบ ยอด net ในชีตสูงเกินจริง <b>${baht(diff)}</b></div><button class="btn sm act" onclick="repair()">ซ่อม</button></div>`);
+    const diff = M.mismatch.reduce((a,d)=>a+(sum(d.exp)-d.sheetSumExp),0);
+    alerts.push(`<div class="alert bad"><span>🧮</span><div>สูตรในชีต Sum นับรายจ่ายไม่ครบ (ต่างกัน <b>${baht(diff)}</b>)</div><button class="btn sm act" onclick="repair()">ซ่อม</button></div>`);
   }
   const limHtml = M.limits.map(l => (l.daily?limBar(l.cat,'วันนี้',l.today,l.daily):'') + (l.monthly?limBar(l.cat,'เดือนนี้',l.month,l.monthly):'')).join('');
   const todayItems = itemsOf(M.td).slice().reverse();
@@ -756,14 +763,11 @@ function saveEntry(){
 }
 function newCategory(){
   openSheet(`<h3>เพิ่มหมวดใหม่</h3>
-    <div class="muted" style="font-size:13px">แอปจะแทรกคอลัมน์ใหม่ในชีต และปรับสูตร sum ให้รวมหมวดนี้</div>
-    <label class="f">ประเภท</label>
-    <div class="seg" id="ncType"><button data-v="exp" class="${S.addType==='exp'?'on':''}">รายจ่าย</button><button data-v="inc" class="${S.addType==='inc'?'on':''}">รายรับ</button></div>
+    <div class="muted" style="font-size:13px">เพิ่มได้เฉพาะหมวด <b>รายจ่าย</b> — แอปจะแทรกคอลัมน์ใหม่ในชีต (ชื่ออยู่แถวที่ 2) ส่วนรายรับมีแค่คอลัมน์ D และ E จึงเพิ่มไม่ได้</div>
     <label class="f">ชื่อหมวด</label><input type="text" id="ncName" placeholder="เช่น ค่าเดินทาง, ลงทุน, ของขวัญ">
     <label class="f">ไอคอน (อีโมจิ)</label><input type="text" id="ncIcon" placeholder="🚌" maxlength="4">
     <div style="height:16px"></div><button class="btn primary block" id="ncSave">เพิ่มหมวด</button>`);
-  let t = S.addType;
-  $$('#ncType button').forEach(b=>b.onclick=()=>{ t=b.dataset.v; $$('#ncType button').forEach(x=>x.classList.toggle('on',x===b)); });
+  const t = 'exp';
   $('#ncSave').onclick = async () => {
     const name = $('#ncName').value.trim(); if (!name) return toast('ตั้งชื่อหมวดก่อน');
     const b = $('#ncSave'); b.disabled = true; b.textContent='กำลังแทรกคอลัมน์…';
@@ -772,7 +776,7 @@ function newCategory(){
       if (ic) { S.data.settings.icons = {...(S.data.settings.icons||{}), [name]: ic}; await api('saveSettings', S.data.settings); }
       const D = await api('addCategory', {type:t, name});
       if (ic) D.settings.icons = {...(D.settings.icons||{}), [name]: ic};
-      receive(D); S.addType=t; S.addCat=name; closeSheet(); if (S.view==='add') renderAdd(); else rerender(); toast('เพิ่มหมวด '+esc(name)+' แล้ว');
+      receive(D); S.addType='exp'; S.addCat=name; closeSheet(); if (S.view==='add') renderAdd(); else rerender(); toast('เพิ่มหมวด '+esc(name)+' แล้ว');
     } catch(e){ toast('❌ '+esc(errMsg(e)),4000); b.disabled=false; b.textContent='เพิ่มหมวด'; }
   };
 }
@@ -974,6 +978,12 @@ function renderSettings(){
   const D = S.data, st = D.settings, cur = document.documentElement.dataset.theme;
   const lims = Object.entries(st.limits||{});
   $('#v-settings').innerHTML = `
+    <div class="sec-t">ผู้ใช้งาน</div>
+    <div class="card">
+      <label class="f" style="margin-top:0">ชื่อผู้ใช้งาน (แสดงที่หน้าหลัก)</label>
+      <div style="display:flex;gap:8px"><input type="text" id="sName" value="${esc(st.userName||'KruIce')}" maxlength="24" placeholder="ชื่อของคุณ" autocomplete="off"><button class="btn primary" onclick="saveName()">บันทึก</button></div>
+    </div>
+
     <div class="sec-t">ธีม</div>
     <div class="themes">${THEMES.map(t=>`<button class="th ${cur===t.k?'on':''}" onclick="setTheme('${t.k}',true)"><div class="pv" style="background:${t.sw[0]}"><i style="background:${t.sw[1]};width:100%;height:14px"></i><i style="background:${t.sw[2]};width:60%"></i><i style="background:${t.sw[3]};width:40%"></i></div>${t.n}</button>`).join('')}</div>
 
@@ -1019,10 +1029,10 @@ function renderSettings(){
 
     <div class="sec-t">ชีตและหมวดหมู่</div>
     <div class="card">
-      <button class="btn block" onclick="newCategory()">+ เพิ่มหมวดใหม่ (แทรกคอลัมน์ในชีต)</button>
+      <button class="btn block" onclick="newCategory()">+ เพิ่มหมวดรายจ่ายใหม่ (แทรกคอลัมน์ในชีต)</button>
       <div style="height:8px"></div>
-      <button class="btn block" onclick="repair()">ซ่อมสูตร sum / net ให้รวมทุกหมวด</button>
-      <div class="faint" style="font-size:12.5px;margin-top:8px">เขียนสูตรในคอลัมน์ sum และ net ใหม่ทุกแถว ข้อมูลที่กรอกไว้ไม่ถูกแตะ ย้อนกลับได้จากประวัติเวอร์ชันของชีต</div>
+      <button class="btn block" onclick="repair()">ซ่อมสูตรในชีต Sum ให้รวมทุกหมวด</button>
+      <div class="faint" style="font-size:12.5px;margin-top:8px">เขียนสูตร sumรายรับ / sumรายจ่าย / net ในชีต Sum ใหม่ทุกแถว ข้อมูลที่กรอกไว้และหมายเหตุไม่ถูกแตะ ย้อนกลับได้จากประวัติเวอร์ชันของชีต</div>
     </div>
     <div class="sec-t">การเชื่อมต่อ</div>
     <div class="card">
@@ -1053,6 +1063,7 @@ function limitForm(cat){
   };
 }
 function delLimit(c){ if(!confirm('ลบลิมิต '+c+'?')) return; delete S.data.settings.limits[c]; persist('ลบลิมิตแล้ว'); }
+function saveName(){ const v=$('#sName').value.trim(); if(!v) return toast('ใส่ชื่อก่อน'); S.data.settings.userName=v.slice(0,24); persist('เปลี่ยนชื่อเป็น '+esc(v)+' แล้ว'); }
 function saveBudget(){ const st=S.data.settings; st.payday=clamp(+$('#sPay').value||0,0,31); st.savingGoalPct=clamp(+$('#sGoal').value||0,0,90); st.dailyBudget=+$('#sDaily').value||0; persist('บันทึกแล้ว'); }
 function saveRem(){ S.data.settings.reminder = {enabled:$('#sRem').checked, hour:+$('#sHour').value, email:true}; persist($('#sRem').checked?'เปิดแจ้งเตือนเวลา '+$('#sHour').value+':00 น.':'ปิดแจ้งเตือนแล้ว'); }
 async function testNoti(){ try{ await api('testNotification'); toast('ส่งอีเมลทดสอบแล้ว ลองดูใน Gmail'); }catch(e){ toast('❌ '+esc(errMsg(e)),4000); } }
@@ -1063,7 +1074,7 @@ function delWatch(i){ S.data.settings.watchlist.splice(i,1); S.market=null; pers
 function addFx(){ const c=$('#fxSel').value; if(!c) return; S.data.settings.fx=[...(S.data.settings.fx||[]),c]; S.market=null; persist('เพิ่ม '+c); }
 function delFx(i){ S.data.settings.fx.splice(i,1); S.market=null; persist(); }
 async function repair(){
-  if (!confirm('เขียนสูตร sumรายรับ / sumรายจ่าย / net ใหม่ทุกแถวให้รวมทุกหมวด?\n(ข้อมูลที่กรอกไม่ถูกแก้ ย้อนได้จากประวัติเวอร์ชัน)')) return;
+  if (!confirm('เขียนสูตร sumรายรับ / sumรายจ่าย / net ในชีต Sum ใหม่ทุกแถวให้รวมทุกหมวด?\n(ข้อมูลที่กรอกไม่ถูกแก้ ย้อนได้จากประวัติเวอร์ชัน)')) return;
   try { receive(await api('repairFormulas')); toast('ซ่อมสูตรแล้ว ยอดในชีตตรงกับแอป'); } catch(e){ toast('❌ '+esc(errMsg(e)),4000); }
 }
 
@@ -1090,6 +1101,8 @@ function setData(D){
   if (CFG && !CFG.demo) D.today = iso(new Date());
   S.data = D; S.model = buildModel(D);
   const h = new Date().getHours();
+  $('#titleLbl').textContent = (D.settings && D.settings.userName || 'KruIce').trim() || 'KruIce';
+  document.title = ($('#titleLbl').textContent) + ' Money Quest';
   $('#hiLbl').textContent = (h<12?'อรุณสวัสดิ์':h<17?'สวัสดีตอนบ่าย':'สวัสดีตอนเย็น') + ' · ' + thDate(D.today, true);
 }
 function rerender(){ ({home:renderHome, add:renderAdd, stats:renderStats, market:renderMarket, settings:renderSettings})[S.view](); }
