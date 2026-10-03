@@ -113,8 +113,8 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:12px 0 6px}
 .hero-top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--text-2);position:relative}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:12.5px;font-weight:600;background:var(--surface-2);border:1px solid var(--border)}
 .hero-main{display:grid;grid-template-columns:44% 1fr;gap:6px;align-items:end;position:relative;margin-top:4px}
-.char{height:228px;display:flex;align-items:flex-end;justify-content:center;position:relative}
-.char img{max-height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.18));animation:breathe 3.6s ease-in-out infinite;transform-origin:50% 100%}
+.char{height:228px;position:relative;text-align:center;overflow:hidden}
+.char img{display:inline-block;height:228px;width:auto;max-width:100%;object-fit:contain;object-position:50% 100%;vertical-align:bottom;filter:drop-shadow(0 10px 14px rgba(0,0,0,.18));animation:breathe 3.6s ease-in-out infinite;transform-origin:50% 100%}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012) translateY(-2px)}}
 .char .shadow{position:absolute;bottom:2px;left:50%;width:60%;height:10px;transform:translateX(-50%);border-radius:50%;background:rgba(0,0,0,.18);filter:blur(4px)}
 .state-t{font-size:19px;font-weight:700;line-height:1.25;margin-top:4px}
@@ -130,7 +130,7 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:12px 0 6px}
 .gauge .pin{position:absolute;top:-5px;width:4px;height:20px;border-radius:3px;background:var(--text);box-shadow:0 0 0 2px var(--surface);transform:translateX(-50%);transition:left .5s}
 .states{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px}
 .st{border:0;background:var(--bg-2);border-radius:10px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;color:var(--text-3);border:1px solid transparent}
-.st img{height:34px;opacity:.55;filter:grayscale(.6)}
+.st img{height:34px;width:auto;max-width:100%;object-fit:contain;opacity:.55;filter:grayscale(.6)}
 .st.on{border-color:var(--sc);color:var(--text);background:var(--surface-2)}
 .st.on img{opacity:1;filter:none}
 .mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;position:relative}
@@ -159,50 +159,44 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:12px 0 6px}
 
 /* =================== RECORD (no scroll) =================== */
 body.v-add .top{display:none}
-body.v-add .app{padding-top:calc(8px + var(--safe-t));padding-bottom:0}
+body.v-add .app{padding-top:calc(8px + var(--safe-t))}
 #v-add.on{display:flex}
-#v-add{flex-direction:column;gap:8px;height:calc(100vh - var(--tab-h) - var(--safe-b) - var(--safe-t) - 12px);height:calc(100dvh - var(--tab-h) - var(--safe-b) - var(--safe-t) - 12px);min-height:470px}
+#v-add{flex-direction:column;gap:10px}
 .r-top{display:flex;gap:8px;align-items:center}
 .r-top .seg{flex:1}
 .datebtn{position:relative;display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:13.5px;font-weight:500;white-space:nowrap}
 .datebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;border:0;padding:0}
-.amt{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;flex:none}
-.amt .ic{width:44px;height:44px;font-size:22px;background:var(--tint)}
-.amt .cn{font-size:14px;font-weight:600;line-height:1.25}
+.amt{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 14px 6px;box-shadow:var(--shadow)}
+.amt .head{display:flex;align-items:center;gap:10px}
+.amt .ic{width:40px;height:40px;font-size:20px;background:var(--tint)}
+.amt .cn{font-size:14.5px;font-weight:600;line-height:1.25}
 .amt .hint{font-size:12px;color:var(--text-3);line-height:1.3}
 .amt .hint.bad{color:var(--neg)} .amt .hint.warn{color:var(--warn)}
-.amt .v{margin-left:auto;font-size:32px;font-weight:700;white-space:nowrap;line-height:1.1;text-align:right}
-.amt .v.zero{color:var(--text-3)}
-.amt .v.inc{color:var(--pos)}
-.cats-wrap{flex:1 1 auto;min-height:118px;display:flex;flex-direction:column}
-.cats{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:0}
-.cats::-webkit-scrollbar{display:none}
-.cpage{flex:0 0 100%;scroll-snap-align:start;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:6px;padding:1px}
-.cat{border:1px solid transparent;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;font-size:11px;line-height:1.15;text-align:center;color:var(--text-2);min-width:0}
-.cat .e{width:clamp(36px,5.6vh,46px);height:clamp(36px,5.6vh,46px);border-radius:14px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);font-size:clamp(18px,2.8vh,22px);transition:.15s}
-.cat span.n{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.money-row{display:flex;align-items:baseline;gap:6px}
+.money-row .cur{font-size:26px;font-weight:600;color:var(--text-3)}
+input.money{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;font-size:36px!important;font-weight:700;text-align:right;padding:2px 0!important;color:var(--text)}
+input.money::placeholder{color:var(--text-3)}
+input.money.inc{color:var(--pos)}
+.quick{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:1px;margin:0 -16px;padding:1px 16px}
+.quick::-webkit-scrollbar{display:none}
+.quick button{flex:none;border:1px solid var(--border);background:var(--surface);border-radius:99px;padding:8px 14px;font-weight:600;font-size:14px;color:var(--text)}
+.quick button:active{background:var(--surface-3)}
+.quick button.clr{color:var(--text-3);font-weight:500}
+.r-note{display:flex;gap:8px;align-items:stretch}
+.note{flex:1;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px;min-width:0}
+.note input{border:0!important;background:transparent!important;padding:10px 0;box-shadow:none!important;font-size:16px}
+.r-note .btn{padding:0 18px}
+.cats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.cat{height:66px;border:1px solid transparent;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:2px;font-size:11px;line-height:1.15;text-align:center;color:var(--text-2);min-width:0;overflow:hidden}
+.cat .e{width:42px;height:42px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);font-size:21px;line-height:1;transition:background .15s}
+.cat .n{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cat.on{color:var(--text);font-weight:600}
 .cat.on .e{background:var(--primary);border-color:var(--primary);box-shadow:0 4px 12px var(--tint)}
 .cat.over .e{box-shadow:inset 0 0 0 2px var(--neg)}
-.dots{display:flex;justify-content:center;gap:5px;height:10px;align-items:center}
-.dots i{width:6px;height:6px;border-radius:9px;background:var(--surface-3);transition:.2s}
-.dots i.on{width:16px;background:var(--primary)}
-.note{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px;flex:none}
-.note input{border:0;background:transparent;padding:9px 0;box-shadow:none!important;font-size:16px}
-.keys{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(40px,6.4vh,54px);gap:6px;flex:none}
-.key{border:0;border-radius:14px;background:var(--surface);border:1px solid var(--border);font-size:21px;font-weight:500;display:grid;place-items:center;user-select:none;-webkit-user-select:none}
-.key:active{background:var(--surface-3);transform:scale(.97)}
-.key.fn{background:var(--surface-2);color:var(--text-2);font-size:16px}
-.key.save{grid-row:span 2;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600;flex-direction:column;gap:2px;border-color:transparent}
-.key.save svg{width:26px;height:26px}
-@media (max-height:600px){ #v-add{gap:6px} .amt{padding:7px 12px} .amt .v{font-size:26px} .amt .ic{width:38px;height:38px} .cat{gap:2px;padding:2px} .cat .e{width:32px;height:32px;font-size:17px;border-radius:11px} .cat span.n{font-size:10px} .keys{grid-auto-rows:38px;gap:5px} .note input{padding:7px 0} }
-
-/* =================== STATS =================== */
-.mswitch{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:6px;margin-bottom:12px;box-shadow:var(--shadow)}
-.mswitch b{font-size:16px;font-weight:600}
-.mswitch .iconbtn{border:0;background:var(--bg-2);width:36px;height:36px}
-.mswitch .iconbtn[disabled]{opacity:.3}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.cats.mini{max-height:230px;overflow-y:auto}
+@media (max-height:620px){ #v-add{gap:8px} .cat{height:58px} .cat .e{width:36px;height:36px;font-size:18px} input.money{font-size:30px!important} }
+.edit-actions{display:flex;gap:8px;margin-top:16px}
+.edit-actions .btn{flex:1}
 .chartbox{position:relative;height:220px}
 .chartbox.tall{height:250px}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -342,11 +336,37 @@ let QUEUE = LS.get('mq_queue', []);
 let flushing = false;
 function applyLocal(D, e){
   let d = D.days.find(x=>x.date===e.date);
-  if (!d) { d = {date:e.date, inc:{}, exp:{}, row:0, note:'', sheetSumExp:null}; D.days.push(d); }
+  if (!d) { d = {date:e.date, inc:{}, exp:{}, items:{inc:{},exp:{}}, row:0, note:'', sheetSumExp:null}; D.days.push(d); }
   const k = e.type==='inc' ? 'inc' : 'exp';
-  d[k][e.cat] = +(((d[k][e.cat]||0) + +e.amount).toFixed(2));
+  const prev = d[k][e.cat] || 0;
+  d.items = d.items || {inc:{},exp:{}}; d.items[k] = d.items[k] || {};
+  const arr = d.items[k][e.cat] || (prev ? [prev] : []);
+  arr.push(+e.amount); d.items[k][e.cat] = arr;
+  d[k][e.cat] = +((prev + +e.amount).toFixed(2));
   d.sheetSumExp = null;
   if (e.note) d.note = (d.note ? d.note+' | ' : '') + e.cat+' '+e.amount+': '+e.note;
+}
+/** แก้/ลบรายการย่อยในข้อมูลที่ถืออยู่ (ใช้ในโหมดตัวอย่าง) */
+function editLocal(D, p){
+  const d = D.days.find(x=>x.date===p.date); if (!d) return;
+  const k = p.type==='inc' ? 'inc' : 'exp';
+  d.items = d.items || {inc:{},exp:{}}; d.items[k] = d.items[k] || {};
+  const get = c => d.items[k][c] || (d[k][c] ? [d[k][c]] : []);
+  const put = (c, arr) => { arr = arr.filter(x=>x>0); if (arr.length) { d.items[k][c] = arr; d[k][c] = +arr.reduce((a,b)=>a+b,0).toFixed(2); } else { delete d.items[k][c]; delete d[k][c]; } };
+  const a = get(p.cat);
+  if (p.del) { a.splice(p.index,1); put(p.cat, a); }
+  else if (!p.newCat || p.newCat===p.cat) { a[p.index] = +p.newAmount; put(p.cat, a); }
+  else { a.splice(p.index,1); put(p.cat, a); const b = get(p.newCat); b.push(+p.newAmount); put(p.newCat, b); }
+  d.sheetSumExp = null;
+}
+function itemsOf(d){
+  const out = [];
+  if (!d) return out;
+  ['inc','exp'].forEach(t => Object.entries(d[t]||{}).forEach(([c,v]) => {
+    const arr = (d.items && d.items[t] && d.items[t][c]) || [v];
+    arr.forEach((a,i) => out.push({t, c, i, a}));
+  }));
+  return out;
 }
 function syncUI(state){
   const el = document.getElementById('sync'); if (!el) return;
@@ -409,7 +429,8 @@ const Mock = (() => {
   const sp = (n,b,v)=>Array.from({length:n},(_,i)=>+(b*(1+Math.sin(i/2.7+v)*.03+(i-n/2)*v*.002)).toFixed(2));
   return {
     getAppData: pack,
-    addEntries(list){ list.forEach(e=>{ const d=dayOf(e.date), k=e.type==='inc'?'inc':'exp'; d[k][e.cat]=+((d[k][e.cat]||0)+ +e.amount).toFixed(2); d.sheetSumExp=null; }); return pack(); },
+    addEntries(list){ list.forEach(e=>applyLocal({days}, e)); days.sort((a,b)=>a.date<b.date?-1:1); return pack(); },
+    editItem(p){ editLocal({days}, p); return pack(); },
     setCell(p){ const d=dayOf(p.date), k=p.type==='inc'?'inc':'exp'; if(+p.value) d[k][p.cat]=+p.value; else delete d[k][p.cat]; d.sheetSumExp=null; return pack(); },
     addCategory(p){ (p.type==='inc'?inc:exp).push(p.name); return pack(); },
     repairFormulas(){ days.forEach(d=>d.sheetSumExp=null); return pack(); },
@@ -498,6 +519,7 @@ const sprite = n => (window.SPRITES && window.SPRITES[n-1]) || '';
    Model
    ========================================================= */
 const S = { data:null, model:null, market:null, view:'home', addType:'exp', addCat:null, addDate:null, amt:'0', note:'', statTab:'day', statMonth:null, charts:{}, preview:null };
+S.amt = '';
 
 function buildModel(D){
   const st = D.settings;
@@ -573,7 +595,7 @@ function renderHome(){
     alerts.push(`<div class="alert bad"><span>🧮</span><div>สูตร sumรายจ่ายในชีตนับไม่ครบ ยอด net ในชีตสูงเกินจริง <b>${baht(diff)}</b></div><button class="btn sm act" onclick="repair()">ซ่อม</button></div>`);
   }
   const limHtml = M.limits.map(l => (l.daily?limBar(l.cat,'วันนี้',l.today,l.daily):'') + (l.monthly?limBar(l.cat,'เดือนนี้',l.month,l.monthly):'')).join('');
-  const todayItems = Object.entries(M.td.exp).sort((a,b)=>b[1]-a[1]);
+  const todayItems = itemsOf(M.td).slice().reverse();
   const pinLeft = M.pct*100;
 
   $('#v-home').innerHTML = `
@@ -614,7 +636,7 @@ function renderHome(){
 
     <div class="card">
       <div class="card-h"><h3>รายการวันนี้</h3><button class="link" onclick="go('add')">+ เพิ่ม</button></div>
-      ${todayItems.length ? todayItems.map(([c,v])=>`<div class="item tap" onclick="editDay('${M.today}')"><div class="ic">${icon(c)}</div><div class="t">${esc(c)}</div><div class="a num">−${fmt(v)}</div></div>`).join('') : '<div class="empty">ยังไม่มีรายการ</div>'}
+      ${todayItems.length ? todayItems.map(it=>itemRow(M.today, it)).join('') : '<div class="empty">ยังไม่มีรายการ</div>'}
     </div>
 
     ${limHtml ? `<div class="card"><div class="card-h"><h3>ลิมิตที่ตั้งไว้</h3><button class="link" onclick="go('settings')">แก้ไข</button></div>${limHtml}</div>` : ''}`;
@@ -633,12 +655,8 @@ function renderAdd(){
   if (!S.addDate) S.addDate = M.today;
   const cats = S.addType==='inc' ? M.incOrder : M.expOrder;
   if (!cats.includes(S.addCat)) S.addCat = cats[0];
-  const all = [...cats, '__new'];
-  const pages = []; for (let i=0;i<all.length;i+=10) pages.push(all.slice(i,i+10));
   const day = M.byDate[S.addDate];
-  const lmap = D.settings.limits||{};
-  const cnt = day ? Object.keys(day.exp).length + Object.keys(day.inc).length : 0;
-
+  const cnt = itemsOf(day).length;
   $('#v-add').innerHTML = `
     <div class="r-top">
       <div class="seg" id="typeSeg">
@@ -646,62 +664,71 @@ function renderAdd(){
         <button data-v="inc" class="${S.addType==='inc'?'on':''}">รายรับ</button>
       </div>
       <label class="datebtn">${I.cal}<span>${S.addDate===M.today?'วันนี้':thDate(S.addDate)}</span><input type="date" id="addDate" value="${S.addDate}" max="${M.today}"></label>
-      <button class="iconbtn" style="position:relative" onclick="editDay(S.addDate)" aria-label="รายการของวัน">${I.list}${cnt?`<span style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px">${cnt}</span>`:''}</button>
+      <button class="iconbtn" style="position:relative" onclick="dayItems(S.addDate)" aria-label="รายการของวัน">${I.list}${cnt?`<span style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px">${cnt}</span>`:''}</button>
     </div>
     <div class="amt">
-      <div class="ic">${icon(S.addCat)}</div>
-      <div style="min-width:0"><div class="cn">${esc(S.addCat)}</div><div class="hint" id="hint"></div></div>
-      <div class="v num" id="amtV"></div>
+      <div class="head"><div class="ic" id="aIc">${icon(S.addCat)}</div><div style="min-width:0;flex:1"><div class="cn" id="aCn">${esc(S.addCat)}</div><div class="hint" id="hint"></div></div></div>
+      <div class="money-row"><span class="cur">฿</span><input class="money num ${S.addType==='inc'?'inc':''}" id="amt" type="text" inputmode="decimal" placeholder="0" autocomplete="off" enterkeyhint="done" value="${esc(S.amt)}"></div>
     </div>
-    <div class="cats-wrap">
-      <div class="cats" id="cats">${pages.map(pg=>`<div class="cpage">${pg.map(c=> c==='__new'
-          ? `<button class="cat" data-new="1"><span class="e">＋</span><span class="n">เพิ่มหมวด</span></button>`
-          : (()=>{ const l=lmap[c]; const over = S.addType==='exp' && l && ((+l.daily && (day?.exp[c]||0)>=l.daily) || (+l.monthly && M.catMonth(c,S.addDate.slice(0,7))>=l.monthly)); return `<button class="cat ${c===S.addCat?'on':''} ${over?'over':''}" data-c="${esc(c)}"><span class="e">${icon(c)}</span><span class="n">${esc(c)}</span></button>`; })()).join('')}</div>`).join('')}</div>
-      <div class="dots" id="dots">${pages.length>1?pages.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join(''):''}</div>
+    <div class="quick" id="quick">${[5,20,30,50,100,500,1000].map(n=>`<button data-q="${n}">+${n.toLocaleString('th-TH')}</button>`).join('')}<button class="clr" data-q="0">ล้าง</button></div>
+    <div class="r-note">
+      <label class="note">${I.note}<input type="text" id="note" placeholder="หมายเหตุ (ไม่บังคับ)" value="${esc(S.note)}" enterkeyhint="done"></label>
+      <button class="btn primary" id="saveBtn">${I.check}บันทึก</button>
     </div>
-    <label class="note">${I.note}<input type="text" id="note" placeholder="หมายเหตุ (ไม่บังคับ)" value="${esc(S.note)}" enterkeyhint="done"></label>
-    <div class="keys" id="keys">
-      ${['1','2','3','⌫','4','5','6','C','7','8','9','SAVE','.','0','00'].map(k=> k==='SAVE'
-        ? `<button class="key save" data-k="save">${I.check}<span>บันทึก</span></button>`
-        : `<button class="key ${/[⌫C]/.test(k)?'fn':''}" data-k="${k}">${k==='⌫'?I.back:k}</button>`).join('')}
+    <div class="cats" id="cats">
+      ${cats.map(c=>`<button type="button" class="cat ${c===S.addCat?'on':''}" data-c="${esc(c)}"><span class="e">${icon(c)}</span><span class="n">${esc(c)}</span></button>`).join('')}
+      <button type="button" class="cat" id="newCat"><span class="e">＋</span><span class="n">เพิ่มหมวด</span></button>
     </div>`;
 
-  $$('#typeSeg button').forEach(b => b.onclick = () => { S.addType = b.dataset.v; S.addCat=null; renderAdd(); });
+  $$('#typeSeg button').forEach(b => b.onclick = () => { S.addType = b.dataset.v; S.addCat = null; renderAdd(); });
   $('#addDate').onchange = e => { S.addDate = e.target.value || M.today; renderAdd(); };
-  $$('#cats .cat[data-c]').forEach(el => el.onclick = () => { S.addCat = el.dataset.c; renderAdd(); });
-  $('#cats .cat[data-new]').onclick = newCategory;
-  const cs = $('#cats'); cs.onscroll = () => { const i=Math.round(cs.scrollLeft/cs.clientWidth); $$('#dots i').forEach((d,j)=>d.classList.toggle('on',i===j)); };
-  // คงหน้าหมวดที่เลือกไว้
-  const pi = Math.floor(all.indexOf(S.addCat)/10); if (pi>0) cs.scrollLeft = pi*cs.clientWidth;
-  $('#note').oninput = e => S.note = e.target.value;
-  $$('#keys .key').forEach(k => k.onclick = () => key(k.dataset.k));
-  showAmt();
+  $$('#cats .cat[data-c]').forEach(el => el.addEventListener('click', () => {
+    S.addCat = el.dataset.c;
+    $$('#cats .cat').forEach(x => x.classList.toggle('on', x === el));
+    $('#aIc').textContent = icon(S.addCat); $('#aCn').textContent = S.addCat;
+    markOver(); showHint();
+  }));
+  $('#newCat').addEventListener('click', newCategory);
+  const inp = $('#amt');
+  inp.addEventListener('input', () => {
+    let v = inp.value.replace(/,/g,'.').replace(/[^0-9.]/g,'');
+    const p = v.split('.'); if (p.length > 2) v = p[0]+'.'+p.slice(1).join('');
+    const [a,b] = v.split('.'); if (b!=null && b.length>2) v = a+'.'+b.slice(0,2);
+    if (v !== inp.value) inp.value = v;
+    S.amt = v; showHint();
+  });
+  inp.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); inp.blur(); } });
+  // ปุ่มลัด: กดแล้วคีย์บอร์ดไม่ปิด
+  $$('#quick button').forEach(b => {
+    b.addEventListener('pointerdown', e => e.preventDefault());
+    b.addEventListener('mousedown', e => e.preventDefault());
+    b.addEventListener('click', () => {
+      const n = +b.dataset.q;
+      const v = n ? Math.round(((parseFloat(S.amt)||0) + n)*100)/100 : '';
+      S.amt = v==='' ? '' : String(v); inp.value = S.amt; showHint();
+      if (navigator.vibrate) navigator.vibrate(5);
+    });
+  });
+  $('#note').addEventListener('input', e => S.note = e.target.value);
+  $('#saveBtn').addEventListener('pointerdown', e => e.preventDefault());
+  $('#saveBtn').addEventListener('click', saveEntry);
+  markOver(); showHint();
 }
-function key(k){
-  let a = S.amt;
-  if (k==='save') return saveEntry();
-  if (k==='C') a='0';
-  else if (k==='⌫') a = a.length>1 ? a.slice(0,-1) : '0';
-  else if (k==='.') { if (!a.includes('.')) a += '.'; }
-  else {
-    const dec = a.split('.')[1];
-    if (dec!=null && dec.length + k.length > 2) return;
-    if (a.replace('.','').length >= 9) return;
-    a = (a==='0' ? (k==='00'?'0':k) : a+k);
-  }
-  S.amt = a; if (navigator.vibrate) navigator.vibrate(5); showAmt();
+function markOver(){
+  const M = S.model, lmap = S.data.settings.limits||{}, day = M.byDate[S.addDate];
+  $$('#cats .cat[data-c]').forEach(el => {
+    const c = el.dataset.c, l = lmap[c];
+    const over = S.addType==='exp' && l && ((+l.daily && (day?.exp[c]||0)>=l.daily) || (+l.monthly && M.catMonth(c,S.addDate.slice(0,7))>=l.monthly));
+    el.classList.toggle('over', !!over);
+  });
 }
-function showAmt(){
-  const [i, d] = S.amt.split('.');
-  const v = $('#amtV'); if (!v) return;
-  v.textContent = '฿' + (+i).toLocaleString('th-TH') + (d!=null ? '.'+d : '');
-  v.className = 'v num' + (+S.amt ? (S.addType==='inc'?' inc':'') : ' zero');
-  // hint ลิมิต / ยอดวันนี้
-  const M = S.model, h = $('#hint'), a = +S.amt || 0;
+function showHint(){
+  const M = S.model, h = $('#hint'); if (!h) return;
+  const a = parseFloat(S.amt) || 0;
   const day = M.byDate[S.addDate];
   const l = (S.data.settings.limits||{})[S.addCat];
   const t = (S.addType==='exp' ? day?.exp[S.addCat] : day?.inc[S.addCat]) || 0;
-  let txt = t ? `วันนี้แล้ว ${baht(t)}` : (S.addType==='exp' ? 'ยังไม่มีรายการวันนี้' : 'รายรับ');
+  let txt = t ? `${S.addDate===M.today?'วันนี้':thDate(S.addDate)}แล้ว ${baht(t)}` : (S.addType==='exp' ? 'ยังไม่มีรายการในหมวดนี้' : 'รายรับ');
   let cls = '';
   if (S.addType==='exp' && l) {
     const m = M.catMonth(S.addCat, S.addDate.slice(0,7));
@@ -712,19 +739,18 @@ function showAmt(){
   h.textContent = txt; h.className = 'hint ' + cls;
 }
 function saveEntry(){
-  const amount = +S.amt;
-  if (!(amount>0)) { toast('กดตัวเลขจำนวนเงินก่อนนะ'); return; }
+  const amount = Math.round((parseFloat(S.amt)||0)*100)/100;
+  if (!(amount>0)) { toast('ใส่จำนวนเงินก่อนนะ'); $('#amt') && $('#amt').focus(); return; }
   const prevState = S.model.state.n;
   const e = {id: Date.now().toString(36)+Math.random().toString(36).slice(2,7), date:S.addDate, type:S.addType, cat:S.addCat, amount, note:S.note.trim()};
-  // 1) แสดงผลทันทีในเครื่อง
   applyLocal(S.data, e); setData(S.data);
-  S.amt = '0'; S.note = '';
+  S.amt = ''; S.note = '';
   const l = S.model.limits.find(x=>x.cat===e.cat);
   if (S.model.state.n !== prevState) toast(`สถานะเปลี่ยนเป็น “${S.model.state.t}” (${Math.round(S.model.pct*100)}%)`, 3600);
   else if (e.type==='exp' && l && (l.dOver||l.mOver)) toast(`⚠ ${esc(e.cat)} เกินลิมิตแล้ว`, 3200);
   else toast(`บันทึก ${esc(e.cat)} ${baht(amount)} แล้ว · เหลือ ${Math.round(S.model.pct*100)}%`);
+  if (document.activeElement) document.activeElement.blur();
   renderAdd();
-  // 2) ส่งขึ้นชีตเบื้องหลัง (ถ้าออฟไลน์จะรอส่งให้เอง)
   if (CFG && !CFG.demo) { QUEUE.push(e); LS.set('mq_queue', QUEUE); flushQueue(); }
   else { Mock.addEntries([e]); }
 }
@@ -750,27 +776,60 @@ function newCategory(){
     } catch(e){ toast('❌ '+esc(errMsg(e)),4000); b.disabled=false; b.textContent='เพิ่มหมวด'; }
   };
 }
-function editDay(date){
+function itemRow(date, it){
+  return `<div class="item tap" onclick="editItemSheet('${date}','${it.t}',${JSON.stringify(it.c).replace(/"/g,'&quot;')},${it.i})"><div class="ic">${icon(it.c)}</div><div style="min-width:0"><div class="t">${esc(it.c)}</div><div class="s">${it.t==='inc'?'รายรับ':'รายจ่าย'} · แตะเพื่อแก้ไข</div></div><div class="a num ${it.t==='inc'?'pos':''}">${it.t==='inc'?'+':'−'}${fmt(it.a)}</div></div>`;
+}
+function dayItems(date){
   const d = S.model.byDate[date];
-  const rows = d ? [...Object.entries(d.inc).map(([c,v])=>({c,v,t:'inc'})), ...Object.entries(d.exp).map(([c,v])=>({c,v,t:'exp'}))] : [];
+  const its = itemsOf(d);
   openSheet(`<h3>${thDate(date,true)}</h3>
-    <div class="muted" style="font-size:13px;margin-bottom:6px">${rows.length?'แก้ยอดรวมของแต่ละหมวดได้ (ใส่ 0 = ลบ)':'ยังไม่มีรายการในวันนี้'}</div>
-    ${rows.map((r,i)=>`<div class="item"><div class="ic">${icon(r.c)}</div><div style="flex:1"><div class="t">${esc(r.c)}</div><div class="s">${r.t==='inc'?'รายรับ':'รายจ่าย'}</div></div><input type="text" inputmode="decimal" style="width:110px;text-align:right" data-i="${i}" value="${r.v}"></div>`).join('')}
+    ${d ? `<div class="grid2" style="margin:12px 0"><div class="kpi"><div class="l">รายรับ</div><div class="v num pos">+${fmt(d.incT)}</div></div><div class="kpi"><div class="l">รายจ่าย</div><div class="v num neg">−${fmt(d.expT)}</div></div></div>` : ''}
+    ${its.length ? its.map(it=>itemRow(date,it)).join('') : '<div class="empty">ยังไม่มีรายการในวันนี้</div>'}
     ${d && d.note ? `<div class="faint" style="font-size:12.5px;margin-top:8px">📝 ${esc(d.note)}</div>`:''}
-    ${rows.length?`<div style="height:14px"></div><button class="btn primary block" id="edSave">บันทึกการแก้ไข</button>`:''}`);
-  if (!rows.length) return;
-  $('#edSave').onclick = async () => {
-    const b=$('#edSave'); b.disabled = true;
-    try {
-      let D = null;
-      for (const inp of $$('#sheetBody input[data-i]')) {
-        const r = rows[+inp.dataset.i]; const v = parseFloat(inp.value.replace(/,/g,''))||0;
-        if (Math.abs(v - r.v) > 0.001) D = await api('setCell', {date, type:r.t, cat:r.c, value:v});
-      }
-      if (D) receive(D);
-      closeSheet(); rerender(); toast('แก้ไขแล้ว');
-    } catch(e){ toast('❌ '+esc(errMsg(e)),4000); b.disabled=false; }
-  };
+    ${d ? `<div class="faint" style="font-size:12.5px;margin-top:8px">คงเหลือสะสมหลังวันนี้ ${baht(d.bal)}</div>` : ''}`);
+}
+const editDay = dayItems, dayDetail = dayItems;
+
+function editItemSheet(date, t, c, i){
+  const d = S.model.byDate[date];
+  const it = itemsOf(d).find(x => x.t===t && x.c===c && x.i===i);
+  if (!it) return toast('ไม่พบรายการ');
+  const cats = t==='inc' ? S.model.incOrder : S.model.expOrder;
+  let sel = c;
+  openSheet(`<h3>แก้ไขรายการ</h3>
+    <div class="muted" style="font-size:13px">${thDate(date,true)} · ${t==='inc'?'รายรับ':'รายจ่าย'}</div>
+    <label class="f">จำนวนเงิน (บาท)</label>
+    <input type="text" id="eAmt" class="num" inputmode="decimal" value="${it.a}" style="font-size:22px;font-weight:600">
+    <label class="f">หมวด</label>
+    <div class="cats mini" id="eCats">${cats.map(x=>`<button type="button" class="cat ${x===c?'on':''}" data-c="${esc(x)}"><span class="e">${icon(x)}</span><span class="n">${esc(x)}</span></button>`).join('')}</div>
+    <div class="edit-actions">
+      <button class="btn danger" id="eDel">ลบรายการ</button>
+      <button class="btn primary" id="eSave">บันทึกการแก้ไข</button>
+    </div>`);
+  $$('#eCats .cat').forEach(el => el.addEventListener('click', () => { sel = el.dataset.c; $$('#eCats .cat').forEach(x=>x.classList.toggle('on', x===el)); }));
+  const busy = (b, txt) => { $('#eSave').disabled = $('#eDel').disabled = b; if (txt) (b ? null : null); };
+  $('#eSave').addEventListener('click', async () => {
+    const v = Math.round((parseFloat($('#eAmt').value.replace(/,/g,''))||0)*100)/100;
+    if (!(v>0)) return toast('จำนวนเงินไม่ถูกต้อง');
+    if (v===it.a && sel===c) return closeSheet();
+    busy(true); $('#eSave').textContent = 'กำลังบันทึก…';
+    if (await doEdit({date, type:t, cat:c, index:i, amount:it.a, newCat:sel, newAmount:v})) { closeSheet(); toast('แก้ไขแล้ว'); }
+    else { busy(false); $('#eSave').textContent = 'บันทึกการแก้ไข'; }
+  });
+  $('#eDel').addEventListener('click', async () => {
+    if (!confirm(`ลบ ${c} ${baht(it.a)} ของ${thDate(date,true)}?`)) return;
+    busy(true); $('#eDel').textContent = 'กำลังลบ…';
+    if (await doEdit({date, type:t, cat:c, index:i, amount:it.a, del:true})) { closeSheet(); toast('ลบรายการแล้ว'); }
+    else { busy(false); $('#eDel').textContent = 'ลบรายการ'; }
+  });
+}
+async function doEdit(p){
+  if (CFG && !CFG.demo && QUEUE.length) {
+    await flushQueue();
+    if (QUEUE.length) { toast('ต้องส่งรายการที่ค้างขึ้นชีตก่อน (ต้องออนไลน์)', 3500); return false; }
+  }
+  try { const D = await api('editItem', p); receive(D); return true; }
+  catch(e) { toast('❌ '+esc(errMsg(e)), 4000); return false; }
 }
 
 /* =========================================================
@@ -866,16 +925,6 @@ function statBal(){
   const g = ctx.createLinearGradient(0,0,0,250); g.addColorStop(0, col+'55'); g.addColorStop(1, col+'00');
   S.charts.c4 = new Chart(ctx, {type:'line', data:{labels:M.days.map(d=>thDate(d.date)), datasets:[{label:'คงเหลือ', data:M.days.map(d=>d.bal), borderColor:col, backgroundColor:g, fill:true, tension:.35, pointRadius:0, pointHitRadius:12, borderWidth:2.5}]}, options: baseOpts()});
 }
-function dayDetail(date){
-  const d = S.model.byDate[date];
-  openSheet(`<h3>${thDate(date,true)}</h3>
-    <div class="grid2" style="margin:12px 0"><div class="kpi"><div class="l">รายรับ</div><div class="v num pos">+${fmt(d.incT)}</div></div><div class="kpi"><div class="l">รายจ่าย</div><div class="v num neg">−${fmt(d.expT)}</div></div></div>
-    ${[...Object.entries(d.inc).map(([c,v])=>`<div class="item"><div class="ic">${icon(c)}</div><div class="t">${esc(c)}</div><div class="a num pos">+${fmt(v)}</div></div>`), ...Object.entries(d.exp).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="item"><div class="ic">${icon(c)}</div><div class="t">${esc(c)}</div><div class="a num">−${fmt(v)}</div></div>`)].join('')}
-    ${d.note?`<div class="faint" style="font-size:13px;margin-top:8px">📝 ${esc(d.note)}</div>`:''}
-    <div class="faint" style="font-size:12.5px;margin-top:8px">คงเหลือสะสมหลังวันนี้ ${baht(d.bal)}</div>
-    <div style="height:14px"></div><button class="btn block" onclick="closeSheet();setTimeout(()=>editDay('${date}'),250)">${I.edit} แก้ไขวันนี้</button>`);
-}
-
 /* =========================================================
    MARKET
    ========================================================= */
