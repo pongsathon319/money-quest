@@ -60,6 +60,18 @@
   color-scheme:light;
 }
 
+/* 4) Pastel — ลาเวนเดอร์ มินท์ พีช ชมพูอ่อน นุ่มตา */
+[data-theme=pastel]{
+  --bg:#f3eef7; --bg-2:#ece5f2; --surface:#fcf9fe; --surface-2:#eee7f4; --surface-3:#e3d9ed;
+  --border:rgba(90,70,120,.10); --text:#3b3548; --text-2:#6f6781; --text-3:#9d96ad;
+  --primary:#7a68cf; --primary-2:#6856bf; --on-primary:#ffffff; --tint:rgba(122,104,207,.12);
+  --pos:#3f9a78; --neg:#d4607a; --warn:#c48636; --info:#5a8fcf;
+  --s1:#5fbf9a; --s2:#a9cf6e; --s3:#f0cf62; --s4:#f2a56e; --s5:#ee7f8e;
+  --c1:#8b7bd8; --c2:#6cc5a4; --c3:#f2c36b; --c4:#f08a99; --c5:#7fb2ec; --c6:#b99ae0; --c7:#f3a98a; --c8:#9fb0c0;
+  --shadow:0 1px 2px rgba(90,70,120,.05),0 8px 22px rgba(90,70,120,.09); --hero-glow:rgba(122,104,207,.14);
+  color-scheme:light;
+}
+
 /* =================== BASE =================== */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
@@ -151,7 +163,7 @@ label.f{display:block;font-size:13px;color:var(--text-2);margin:12px 0 6px}
 
 .item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .item:last-child{border-bottom:0}
-.ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);font-size:19px;flex:none}
+.ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--tc,var(--c8)) 24%,var(--surface-2));font-size:19px;flex:none}
 .item .t{font-size:14.5px} .item .s{font-size:12px;color:var(--text-3)}
 .item .a{margin-left:auto;font-weight:600;white-space:nowrap}
 .tap{cursor:pointer}
@@ -188,7 +200,7 @@ input.money.inc{color:var(--pos)}
 .r-note .btn{padding:0 18px}
 .cats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
 .cat{height:66px;border:1px solid transparent;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:2px;font-size:11px;line-height:1.15;text-align:center;color:var(--text-2);min-width:0;overflow:hidden}
-.cat .e{width:42px;height:42px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);font-size:21px;line-height:1;transition:background .15s}
+.cat .e{width:42px;height:42px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--tc,var(--c8)) 26%,var(--surface));border:1px solid var(--border);font-size:21px;line-height:1;transition:background .15s}
 .cat .n{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cat.on{color:var(--text);font-weight:600}
 .cat.on .e{background:var(--primary);border-color:var(--primary);box-shadow:0 4px 12px var(--tint)}
@@ -225,7 +237,7 @@ tr:last-child td{border-bottom:0}
 .src{font-size:12px;color:var(--text-3);margin-top:10px}
 
 /* =================== SETTINGS =================== */
-.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .th{border:2px solid var(--border);border-radius:var(--r-md);padding:8px;background:var(--surface);text-align:center;font-size:12.5px;font-weight:500}
 .th.on{border-color:var(--primary)}
 .th .pv{height:58px;border-radius:10px;padding:7px;display:flex;flex-direction:column;gap:5px;margin-bottom:6px;border:1px solid rgba(0,0,0,.06)}
@@ -432,6 +444,12 @@ const Mock = (() => {
     addEntries(list){ list.forEach(e=>applyLocal({days}, e)); days.sort((a,b)=>a.date<b.date?-1:1); return pack(); },
     editItem(p){ editLocal({days}, p); return pack(); },
     setCell(p){ const d=dayOf(p.date), k=p.type==='inc'?'inc':'exp'; if(+p.value) d[k][p.cat]=+p.value; else delete d[k][p.cat]; d.sheetSumExp=d.sheetSumInc=d.sheetNet=null; return pack(); },
+    renameCategory(p){ const L=p.type==='inc'?inc:exp, i=L.indexOf(p.oldName); if(i<0) throw new Error('ไม่พบหมวด'); if([...inc,...exp].some(x=>x.toLowerCase()===p.newName.toLowerCase()&&x!==p.oldName)) throw new Error('มีหมวดชื่อนี้อยู่แล้ว');
+      L[i]=p.newName; const k=p.type==='inc'?'inc':'exp';
+      days.forEach(d=>{ if(p.newName!==p.oldName){ if(d[k][p.oldName]!=null){d[k][p.newName]=d[k][p.oldName];delete d[k][p.oldName];} if(d.items&&d.items[k]&&d.items[k][p.oldName]){d.items[k][p.newName]=d.items[k][p.oldName];delete d.items[k][p.oldName];} }});
+      settings.icons=settings.icons||{}; settings.limits=settings.limits||{};
+      if(p.newName!==p.oldName){ if(settings.limits[p.oldName]){settings.limits[p.newName]=settings.limits[p.oldName];delete settings.limits[p.oldName];} if(settings.icons[p.oldName]){settings.icons[p.newName]=settings.icons[p.oldName];delete settings.icons[p.oldName];} }
+      if(p.icon) settings.icons[p.newName]=p.icon; return pack(); },
     addCategory(p){ if(p.type==='inc') throw new Error('รายรับเพิ่มหมวดไม่ได้ (มีเฉพาะคอลัมน์ D และ E)'); exp.splice(exp.length-1,0,p.name); return pack(); },
     repairFormulas(){ days.forEach(d=>{d.sheetSumExp=d.sheetSumInc=d.sheetNet=null;}); return pack(); },
     saveSettings(s){ settings=JSON.parse(JSON.stringify(s)); return JSON.parse(JSON.stringify(settings)); },
@@ -486,6 +504,7 @@ const I = {
   right: SVG('<path d="m9 18 6-6-6-6"/>'),
   moon: SVG('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
   sun: SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  heart: SVG('<path d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.4-7 10-7 10z"/>'),
   leaf: SVG('<path d="M5 21c0-9 5-15 15-16-1 10-7 15-15 16z"/><path d="M5 21 14 12"/>'),
   list: SVG('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'),
   refresh: SVG('<path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/>'),
@@ -494,6 +513,7 @@ const I = {
 };
 
 const ICONS = {'เงินเดือน':'💰','รายได้อื่น ๆ':'🪙','รายได้อื่นๆ':'🪙','ค่าอาหาร':'🍜','true wallet':'💳','ค่าเครื่องดื่ม':'🧋','subscription':'📺','ค่าโทรศัพท์':'📱','ค่าบ้าน':'🏠','ค่าน้ำมัน':'⛽','ค่าของใช้ครัวเรือน':'🧴','ค่าตัดผม':'💈','ค่าซักผ้า':'🧺','ออกกำลังกาย':'🏋️','shopee':'🛒','ค่าเสื้อผ้า':'👕','สลากกินแบ่ง':'🎫','ค่าของทำงาน':'📚','ค่ารักษาพยาบาล':'💊','อื่นๆ':'📦'};
+const tcol = c => { let n=0; for (const ch of String(c)) n=(n*31+ch.charCodeAt(0))%997; return 'var(--c'+(n%8+1)+')'; };
 const icon = c => (S.data && S.data.settings.icons && S.data.settings.icons[c]) || ICONS[c] || '🏷️';
 
 function toast(msg, ms=2400){ const t=$('#toast'); t.innerHTML=msg; t.classList.add('on'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'), ms); }
@@ -674,16 +694,16 @@ function renderAdd(){
       <button class="iconbtn" style="position:relative" onclick="dayItems(S.addDate)" aria-label="รายการของวัน">${I.list}${cnt?`<span style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 4px">${cnt}</span>`:''}</button>
     </div>
     <div class="amt">
-      <div class="head"><div class="ic" id="aIc">${icon(S.addCat)}</div><div style="min-width:0;flex:1"><div class="cn" id="aCn">${esc(S.addCat)}</div><div class="hint" id="hint"></div></div></div>
+      <div class="head"><div class="ic" id="aIc" style="--tc:${tcol(S.addCat)}">${icon(S.addCat)}</div><div style="min-width:0;flex:1"><div class="cn" id="aCn">${esc(S.addCat)}</div><div class="hint" id="hint"></div></div><button type="button" class="iconbtn" style="width:34px;height:34px" id="editCat" aria-label="แก้ไขหมวด">${I.edit}</button></div>
       <div class="money-row"><span class="cur">฿</span><input class="money num ${S.addType==='inc'?'inc':''}" id="amt" type="text" inputmode="decimal" placeholder="0" autocomplete="off" enterkeyhint="done" value="${esc(S.amt)}"></div>
     </div>
-    <div class="quick" id="quick">${[5,20,30,50,100,500,1000].map(n=>`<button data-q="${n}">+${n.toLocaleString('th-TH')}</button>`).join('')}<button class="clr" data-q="0">ล้าง</button></div>
+    <div class="quick" id="quick">${[5,10,20,30,50,100,500,1000].map(n=>`<button data-q="${n}">+${n.toLocaleString('th-TH')}</button>`).join('')}<button class="clr" data-q="0">ล้าง</button></div>
     <div class="r-note">
       <label class="note">${I.note}<input type="text" id="note" placeholder="หมายเหตุ (ไม่บังคับ)" value="${esc(S.note)}" enterkeyhint="done"></label>
       <button class="btn primary" id="saveBtn">${I.check}บันทึก</button>
     </div>
     <div class="cats" id="cats">
-      ${cats.map(c=>`<button type="button" class="cat ${c===S.addCat?'on':''}" data-c="${esc(c)}"><span class="e">${icon(c)}</span><span class="n">${esc(c)}</span></button>`).join('')}
+      ${cats.map(c=>`<button type="button" class="cat ${c===S.addCat?'on':''}" data-c="${esc(c)}" style="--tc:${tcol(c)}"><span class="e">${icon(c)}</span><span class="n">${esc(c)}</span></button>`).join('')}
       <button type="button" class="cat" id="newCat"><span class="e">＋</span><span class="n">เพิ่มหมวด</span></button>
     </div>`;
 
@@ -692,10 +712,20 @@ function renderAdd(){
   $$('#cats .cat[data-c]').forEach(el => el.addEventListener('click', () => {
     S.addCat = el.dataset.c;
     $$('#cats .cat').forEach(x => x.classList.toggle('on', x === el));
-    $('#aIc').textContent = icon(S.addCat); $('#aCn').textContent = S.addCat;
+    $('#aIc').textContent = icon(S.addCat); $('#aIc').style.setProperty('--tc', tcol(S.addCat)); $('#aCn').textContent = S.addCat;
     markOver(); showHint();
   }));
   $('#newCat').addEventListener('click', newCategory);
+  $('#editCat').addEventListener('click', () => editCategory(S.addType, S.addCat));
+  // กดค้างที่หมวดเพื่อแก้ชื่อ/อีโมจิ
+  $$('#cats .cat[data-c]').forEach(el => {
+    let tm = null, fired = false;
+    const start = () => { fired = false; tm = setTimeout(() => { fired = true; if (navigator.vibrate) navigator.vibrate(10); editCategory(S.addType, el.dataset.c); }, 550); };
+    const stop = () => clearTimeout(tm);
+    el.addEventListener('touchstart', start, {passive:true}); el.addEventListener('touchend', stop); el.addEventListener('touchmove', stop); el.addEventListener('touchcancel', stop);
+    el.addEventListener('contextmenu', e => e.preventDefault());
+    el.addEventListener('click', e => { if (fired) { e.stopImmediatePropagation(); fired = false; } }, true);
+  });
   const inp = $('#amt');
   inp.addEventListener('input', () => {
     let v = inp.value.replace(/,/g,'.').replace(/[^0-9.]/g,'');
@@ -761,6 +791,35 @@ function saveEntry(){
   if (CFG && !CFG.demo) { QUEUE.push(e); LS.set('mq_queue', QUEUE); flushQueue(); }
   else { Mock.addEntries([e]); }
 }
+function editCategory(type, name){
+  if (!name) return;
+  openSheet(`<h3>แก้ไขหมวด</h3>
+    <div class="muted" style="font-size:13px">${type==='inc'?'รายรับ':'รายจ่าย'} · เปลี่ยนชื่อจะไปแก้หัวคอลัมน์ในชีต (แถวที่ 2) รายการที่บันทึกไว้ไม่หาย</div>
+    <label class="f">ชื่อหมวด</label><input type="text" id="ecName" value="${esc(name)}" maxlength="40">
+    <label class="f">อีโมจิ</label><input type="text" id="ecIcon" value="${esc(icon(name))}" maxlength="8" style="font-size:22px">
+    <div class="tags" style="margin-top:8px">${['🍜','🧋','🛒','🚌','⛽','🏠','📱','💊','🎁','🎮','📚','🐶','☕','💸','🧾','✨'].map(e=>`<button type="button" class="tag" data-e="${e}" style="font-size:18px;border:0">${e}</button>`).join('')}</div>
+    <div style="height:16px"></div><button class="btn primary block" id="ecSave">บันทึก</button>`);
+  $$('[data-e]').forEach(b => b.onclick = () => { $('#ecIcon').value = b.dataset.e; });
+  $('#ecSave').onclick = async () => {
+    const nn = $('#ecName').value.trim(), ic = $('#ecIcon').value.trim();
+    if (!nn) return toast('ตั้งชื่อหมวดก่อน');
+    if (nn === name && ic === icon(name)) return closeSheet();
+    const b = $('#ecSave'); b.disabled = true; b.textContent = 'กำลังบันทึก…';
+    try {
+      if (nn !== name) {
+        if (QUEUE.length) throw new Error('มีรายการรอส่งขึ้นชีต รอซิงก์ให้เสร็จก่อนค่อยเปลี่ยนชื่อ');
+        const D = await api('renameCategory', {type, oldName:name, newName:nn, icon: ic});
+        receive(D);
+      } else {
+        S.data.settings.icons = {...(S.data.settings.icons||{}), [name]: ic};
+        S.data.settings = await api('saveSettings', S.data.settings);
+        setData(S.data);
+      }
+      if (S.addCat === name) S.addCat = nn;
+      closeSheet(); rerender(); toast('แก้ไขหมวดแล้ว');
+    } catch(e){ toast('❌ '+esc(errMsg(e)),4000); b.disabled=false; b.textContent='บันทึก'; }
+  };
+}
 function newCategory(){
   openSheet(`<h3>เพิ่มหมวดใหม่</h3>
     <div class="muted" style="font-size:13px">เพิ่มได้เฉพาะหมวด <b>รายจ่าย</b> — แอปจะแทรกคอลัมน์ใหม่ในชีต (ชื่ออยู่แถวที่ 2) ส่วนรายรับมีแค่คอลัมน์ D และ E จึงเพิ่มไม่ได้</div>
@@ -781,7 +840,7 @@ function newCategory(){
   };
 }
 function itemRow(date, it){
-  return `<div class="item tap" onclick="editItemSheet('${date}','${it.t}',${JSON.stringify(it.c).replace(/"/g,'&quot;')},${it.i})"><div class="ic">${icon(it.c)}</div><div style="min-width:0"><div class="t">${esc(it.c)}</div><div class="s">${it.t==='inc'?'รายรับ':'รายจ่าย'} · แตะเพื่อแก้ไข</div></div><div class="a num ${it.t==='inc'?'pos':''}">${it.t==='inc'?'+':'−'}${fmt(it.a)}</div></div>`;
+  return `<div class="item tap" onclick="editItemSheet('${date}','${it.t}',${JSON.stringify(it.c).replace(/"/g,'&quot;')},${it.i})"><div class="ic" style="--tc:${tcol(it.c)}">${icon(it.c)}</div><div style="min-width:0"><div class="t">${esc(it.c)}</div><div class="s">${it.t==='inc'?'รายรับ':'รายจ่าย'} · แตะเพื่อแก้ไข</div></div><div class="a num ${it.t==='inc'?'pos':''}">${it.t==='inc'?'+':'−'}${fmt(it.a)}</div></div>`;
 }
 function dayItems(date){
   const d = S.model.byDate[date];
@@ -805,7 +864,7 @@ function editItemSheet(date, t, c, i){
     <label class="f">จำนวนเงิน (บาท)</label>
     <input type="text" id="eAmt" class="num" inputmode="decimal" value="${it.a}" style="font-size:22px;font-weight:600">
     <label class="f">หมวด</label>
-    <div class="cats mini" id="eCats">${cats.map(x=>`<button type="button" class="cat ${x===c?'on':''}" data-c="${esc(x)}"><span class="e">${icon(x)}</span><span class="n">${esc(x)}</span></button>`).join('')}</div>
+    <div class="cats mini" id="eCats">${cats.map(x=>`<button type="button" class="cat ${x===c?'on':''}" data-c="${esc(x)}" style="--tc:${tcol(x)}"><span class="e">${icon(x)}</span><span class="n">${esc(x)}</span></button>`).join('')}</div>
     <div class="edit-actions">
       <button class="btn danger" id="eDel">ลบรายการ</button>
       <button class="btn primary" id="eSave">บันทึกการแก้ไข</button>
@@ -973,6 +1032,7 @@ const THEMES = [
   {k:'dark', n:'Dark', sw:['#181b21','#22262e','#8fa3ff','#5fd3a0']},
   {k:'light', n:'White', sw:['#ebeae6','#f6f5f2','#3f4a63','#24885b']},
   {k:'earth', n:'Earth', sw:['#ebe2d0','#f5eee1','#56744a','#c9733a']},
+  {k:'pastel', n:'Pastel', sw:['#f3eef7','#fcf9fe','#7a68cf','#f08a99']},
 ];
 function renderSettings(){
   const D = S.data, st = D.settings, cur = document.documentElement.dataset.theme;
@@ -1029,6 +1089,9 @@ function renderSettings(){
 
     <div class="sec-t">ชีตและหมวดหมู่</div>
     <div class="card">
+      <div class="card-h"><h3>แก้ชื่อ / อีโมจิ หมวด</h3></div>
+      ${[['inc',D.incomeCats],['exp',D.expenseCats]].map(([t,list])=>list.map(c=>`<div class="lrow"><div class="ic" style="--tc:${tcol(c)}">${icon(c)}</div><div><div class="t">${esc(c)}</div><div class="s">${t==='inc'?'รายรับ':'รายจ่าย'}</div></div><div class="r"><button class="iconbtn" style="width:34px;height:34px" onclick="editCategory('${t}',${JSON.stringify(c).replace(/"/g,'&quot;')})">${I.edit}</button></div></div>`).join('')).join('')}
+      <div style="height:10px"></div>
       <button class="btn block" onclick="newCategory()">+ เพิ่มหมวดรายจ่ายใหม่ (แทรกคอลัมน์ในชีต)</button>
       <div style="height:8px"></div>
       <button class="btn block" onclick="repair()">ซ่อมสูตรในชีต Sum ให้รวมทุกหมวด</button>
@@ -1084,12 +1147,12 @@ async function repair(){
 function setTheme(k, save){
   document.documentElement.dataset.theme = k;
   try { localStorage.setItem('mq_theme', k); } catch(e) {}
-  $('#themeBtn').innerHTML = k==='dark' ? I.moon : k==='light' ? I.sun : I.leaf;
+  $('#themeBtn').innerHTML = k==='dark' ? I.moon : k==='light' ? I.sun : k==='pastel' ? I.heart : I.leaf;
   const meta = document.querySelector('meta[name=theme-color]') || Object.assign(document.head.appendChild(document.createElement('meta')), {name:'theme-color'});
   meta.content = cssv('--bg');
   if (S.data) { rerender(); if (save) { S.data.settings.theme = k; api('saveSettings', S.data.settings).catch(()=>{}); } }
 }
-$('#themeBtn').onclick = () => { const order=['dark','light','earth']; const cur=document.documentElement.dataset.theme; setTheme(order[(order.indexOf(cur)+1)%3], true); toast('ธีม '+THEMES.find(t=>t.k===document.documentElement.dataset.theme).n, 1200); };
+$('#themeBtn').onclick = () => { const order=['dark','light','earth','pastel']; const cur=document.documentElement.dataset.theme; setTheme(order[(order.indexOf(cur)+1)%order.length], true); toast('ธีม '+THEMES.find(t=>t.k===document.documentElement.dataset.theme).n, 1200); };
 
 const TABS = [['home','หน้าหลัก',I.home],['stats','สรุป',I.chart],['add','บันทึก',I.plus],['market','ตลาด',I.trend],['settings','ตั้งค่า',I.gear]];
 $('#tabs').innerHTML = TABS.map(([v,l,ic])=> v==='add'
